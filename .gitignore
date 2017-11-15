@@ -1,5 +1,6 @@
 node_modules
 dist
+grafica
 .tmp
 bower_components
 test/bower_components
