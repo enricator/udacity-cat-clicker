@@ -1,14 +1,16 @@
 $(document).ready(function() {
+
   /* ### MODEL ### */
   var model = {
     picSize: 350,
-    picUrlbase: 'https://lorempixel.com/',
     dummyPlaceholder: '',
     kitties: [],
     activeKitty: null,
 
     init: function() {
       this.dummyPlaceholder = "http://via.placeholder.com/" + this.picSize + "x" + this.picSize + "";
+      // cat pics taken from lorempixel.com
+      // ex: https://lorempixel.com/350/350/cats/7/
       this.kitties= [
         {
           name: "Oscar",
@@ -39,43 +41,11 @@ $(document).ready(function() {
           name: "Dori",
           clicks: 0,
           url: "images/cat9.jpg"
-        }
-      ];
-      this.activeKitty = 0;
-    },
-
-    init_v1: function() {
-      this.dummyPlaceholder = "http://via.placeholder.com/" + this.picSize + "x" + this.picSize + "";
-      this.kitties= [
-        {
-          name: "Oscar",
-          clicks: 0,
-          url: this.picUrlbase + this.picSize + "/" + this.picSize + "/cats/5"
         },
         {
-          name: "Wendy",
+          name: "Georg",
           clicks: 0,
-          url: this.picUrlbase + this.picSize + "/" + this.picSize + "/cats/4"
-        },
-        {
-          name: "Igor",
-          clicks: 0,
-          url: this.picUrlbase + this.picSize + "/" + this.picSize + "/cats/3"
-        },
-        {
-          name: "Clara",
-          clicks: 0,
-          url: this.picUrlbase + this.picSize + "/" + this.picSize + "/cats/1"
-        },
-        {
-          name: "Flash",
-          clicks: 0,
-          url: this.picUrlbase + this.picSize + "/" + this.picSize + "/cats/7"
-        },
-        {
-          name: "Dori",
-          clicks: 0,
-          url: this.picUrlbase + this.picSize + "/" + this.picSize + "/cats/9"
+          url: "images/cat8.jpg"
         }
       ];
       this.activeKitty = 0;
