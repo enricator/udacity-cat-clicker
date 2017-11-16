@@ -1,85 +1,172 @@
 $(document).ready(function() {
-  var bDebug = true; //if true the pics will be replaced by the dummyPlaceholder
 
-  logit('\'Cat Clicker premium\' started');
+  /* ### MODEL ### */
+  var model = {
+    picSize: 350,
+    dummyPlaceholder: '',
+    kitties: [],
+    activeKitty: null,
 
-  let size = 350;
-  const picurlbase = 'https://lorempixel.com/';
-  let dummyPlaceholder = "http://via.placeholder.com/" + size + "x" + size + "";
-  let kitties = [
-    {
-      name: "Oscar",
-      clicks: 0,
-      url: picurlbase + size + "/" + size + "/cats/5"
-    },
-    {
-      name: "Wendy",
-      clicks: 0,
-      url: picurlbase + size + "/" + size + "/cats/4"
-    },
-    {
-      name: "Igor",
-      clicks: 0,
-      url: picurlbase + size + "/" + size + "/cats/3"
-    },
-    {
-      name: "Clara",
-      clicks: 0,
-      url: picurlbase + size + "/" + size + "/cats/1"
-    },
-    {
-      name: "Flash",
-      clicks: 0,
-      url: picurlbase + size + "/" + size + "/cats/7"
-    },
-    {
-      name: "Dori",
-      clicks: 0,
-      url: picurlbase + size + "/" + size + "/cats/9"
+    init: function() {
+      this.dummyPlaceholder = "http://via.placeholder.com/" + this.picSize + "x" + this.picSize + "";
+      // cat pics taken from lorempixel.com
+      // ex: https://lorempixel.com/350/350/cats/7/
+      this.kitties= [
+        {
+          name: "Oscar",
+          clicks: 0,
+          url: "images/cat5.jpg"
+        },
+        {
+          name: "Wendy",
+          clicks: 0,
+          url: "images/cat4.jpg"
+        },
+        {
+          name: "Igor",
+          clicks: 0,
+          url: "images/cat3.jpg"
+        },
+        {
+          name: "Clara",
+          clicks: 0,
+          url: "images/cat1.jpg"
+        },
+        {
+          name: "Flash",
+          clicks: 0,
+          url: "images/cat7.jpg"
+        },
+        {
+          name: "Dori",
+          clicks: 0,
+          url: "images/cat9.jpg"
+        },
+        {
+          name: "Georg",
+          clicks: 0,
+          url: "images/cat8.jpg"
+        }
+      ];
+      this.activeKitty = 0;
     }
-  ];
+  };
 
-  let activeId = 0;
 
-  for (var i = 0; i < kitties.length; i++) {
-    $("#kittylist").append(
-      '<li class="list-group-item kitty" id="kitty' +
-        i +
-        '"><span class="badge">' +
-        kitties[i].clicks +
-        "</span>" +
-        kitties[i].name +
-        "</li>"
-    );
+  /* ### VIEWS ### */
+  var catListView = {
+
+    init: function() {
+      this.catList = $("#kittylist");
+      this.kitties = octopus.getKitties();
+      this.show();
+    },
+
+    show: function() {
+      this.catList.innerHTML = '';
+      for (var i = 0; i < this.kitties.length; i++) {
+        this.catList.append(
+          '<li class="list-group-item kitty" id="kitty' +
+            i +
+            '"><span class="badge">' +
+            this.kitties[i].clicks +
+            "</span>" +
+            this.kitties[i].name +
+            "</li>"
+        );
+      }
+
+      $(".kitty").click(function(e) {
+        let catId = parseInt(this.id.substr(-1));
+        octopus.setActiveKitty(catId);
+      });
+
+    },
+
+    updateBadge: function(id, votes) {
+      $('#kitty'+id+' span.badge').text(votes);
+    }
+  };
+
+  var catView = {
+    init: function() {
+      this.catPic = $("#kittypic");
+
+      this.catPic.click(function(e) {
+        octopus.voteForKitty();
+      });
+
+      this.showKitty(octopus.getCurrentKitty());
+    },
+
+    showActiveKitty: function(catId) {
+      let kitty = octopus.getCurrentKitty();
+      $("#dbg").text("active cat id: " + catId);
+      $("#kittyname").text(kitty.name);
+      $("#kittyvotes span.badge").text(kitty.clicks);
+      this.catPic.attr("src", octopus.getKittyPic());
+    },
+
+    showKitty: function(kitty) {
+      $("#kittyname").text(kitty.name);
+      this.updateBadge(kitty.clicks);
+      this.catPic.attr("src", octopus.getKittyPic());
+    },
+
+    updateBadge: function(votes) {
+      $("#kittyvotes span.badge").text(votes);
+    }
+
   }
 
-  setActiveKitty(activeId);
 
-  $(".kitty").click(function(e) {
-    var catId = parseInt(this.id.substr(-1));
-    setActiveKitty(catId);
+  /* ### OCTOPUS thing ### */
+  var octopus = {
+    init: function() {
+      this.bDebug = false;
+      this.log('\'Cat Clicker premium\' - octopus started ' + ((this.bDebug)?'in debug mode':'') );
+      model.init();
+      this.log('model initialized: ' + this.getKittiesNumber() + ' kittens found');
+      catListView.init();
+      this.log('catListView initialized');
+      catView.init();
+      this.log('catView initialized');
+    },
 
-    logit('showing ' + kitties[catId].name + ' (catId:' + catId + ')');
-  });
+    getKitties: function() {
+      return model.kitties;
+    },
+    getKittiesNumber: function(){
+      return model.kitties.length;
+    },
+    getKittyPic: function() {
+      return octopus.bDebug ? model.dummyPlaceholder : model.kitties[model.activeKitty].url;
+    },
+    getCurrentKittyId: function() {
+      return model.activeKitty;
+    },
+    getCurrentKitty: function() {
+      return model.kitties[model.activeKitty];
+    },
 
-  $("#kittypic").click(function(e) {
-    kitties[activeId].clicks += 1;
+    setActiveKitty: function(catId) {
+      model.activeKitty = catId;
+      catView.showActiveKitty(catId);
+    },
 
-    $("#kitty" + activeId + " span.badge").text(kitties[activeId].clicks);
-    $("#kittyvotes span.badge").text(kitties[activeId].clicks);
+    voteForKitty: function() {
+      let kitty = this.getCurrentKitty();
+      kitty.clicks += 1;
+      this.log('new vote for ' + kitty.name + ' [id: '+ this.getCurrentKittyId() +']');
+      //catView.showKitty(kitty);
+      catListView.updateBadge(this.getCurrentKittyId(), kitty.clicks);
+      catView.updateBadge(kitty.clicks);
+    },
 
-    logit('vote casted for ' + kitties[activeId].name);
-  });
-
-  function setActiveKitty(catId) {
-    activeId = catId;
-    $("#dbg").text("active cat: " + activeId);
-    $("#kittyname").text(kitties[activeId].name);
-    $("#kittyvotes span.badge").text(kitties[activeId].clicks);
-    $("#kittypic").attr("src", bDebug ? dummyPlaceholder : kitties[activeId].url);
+    log: function(s) {
+      console.log(s);
+    }
   }
 
-  function logit(s) {
-    if (bDebug) console.log(s);
-  }
+  octopus.init();
 });

@@ -3,7 +3,7 @@
 
 The app was generated using the yeoman webapp generator: https://github.com/yeoman/generator-webapp
 
-It includes [gulp](https://gulpjs.com/) for the build process, including linting for js and css scripts, sass compiling, 
+It includes [gulp](https://gulpjs.com/) for the build process, including linting for js and css scripts, sass compiling,
 preview server with BrowserSync.
 
-Once cloned, run `gulp serve` to preview and watch for changes
+Run `gulp serve` to preview and watch for changes.
