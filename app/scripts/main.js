@@ -9,7 +9,7 @@ $(document).ready(function() {
     activeKitty: null,
 
     init: function() {
-      this.dummyPlaceholder = "http://via.placeholder.com/" + this.picSize + "x" + this.picSize + "";
+      this.dummyPlaceholder = 'http://via.placeholder.com/' + this.picSize + 'x' + this.picSize + '';
       if (localStorage.getItem(this.lsName)) {
         this.kitties = JSON.parse(localStorage.getItem(this.lsName));
       } else {
@@ -17,39 +17,39 @@ $(document).ready(function() {
         // ex: https://lorempixel.com/350/350/cats/7/
         this.kitties= [
           {
-            name: "Oscar",
+            name: 'Oscar',
             clicks: 0,
-            url: "images/cat5.jpg"
+            url: 'images/cat5.jpg'
           },
           {
-            name: "Wendy",
+            name: 'Wendy',
             clicks: 0,
-            url: "images/cat4.jpg"
+            url: 'images/cat4.jpg'
           },
           {
-            name: "Igor",
+            name: 'Igor',
             clicks: 0,
-            url: "images/cat3.jpg"
+            url: 'images/cat3.jpg'
           },
           {
-            name: "Clara",
+            name: 'Clara',
             clicks: 0,
-            url: "images/cat1.jpg"
+            url: 'images/cat1.jpg'
           },
           {
-            name: "Flash",
+            name: 'Flash',
             clicks: 0,
-            url: "images/cat7.jpg"
+            url: 'images/cat7.jpg'
           },
           {
-            name: "Dori",
+            name: 'Dori',
             clicks: 0,
-            url: "images/cat9.jpg"
+            url: 'images/cat9.jpg'
           },
           {
-            name: "Georg",
+            name: 'Georg',
             clicks: 0,
-            url: "images/cat8.jpg"
+            url: 'images/cat8.jpg'
           }
         ];
         localStorage.setItem(this.lsName, JSON.stringify(this.kitties));
@@ -63,8 +63,8 @@ $(document).ready(function() {
   var catListView = {
 
     init: function() {
-      this.catList = $("#kittylist");
-      this.resetButton = $("#btnResetVotes");
+      this.catList = $('#kittylist');
+      this.resetButton = $('#btnResetVotes');
       this.kitties = octopus.getKitties();
       this.show();
     },
@@ -86,7 +86,7 @@ $(document).ready(function() {
           );
         }
 
-        $(".kitty").click(function(e) {
+        $('.kitty').click(function(e) {
           let catId = parseInt(this.id.substr(-1));
           octopus.setActiveKitty(catId);
         });
@@ -112,7 +112,7 @@ $(document).ready(function() {
 
   var catView = {
     init: function() {
-      this.catPic = $("#kittypic");
+      this.catPic = $('#kittypic');
 
       this.catPic.click(function(e) {
         octopus.voteForKitty();
@@ -123,20 +123,20 @@ $(document).ready(function() {
 
     showActiveKitty: function(catId) {
       let kitty = octopus.getCurrentKitty();
-      $("#dbg").text("active cat id: " + catId);
-      $("#kittyname").text(kitty.name);
-      $("#kittyvotes span.badge").text(kitty.clicks);
-      this.catPic.attr("src", octopus.getKittyPic());
+      $('#dbg').text('active cat id: ' + catId);
+      $('#kittyname').text(kitty.name);
+      $('#kittyvotes span.badge').text(kitty.clicks);
+      this.catPic.attr('src', octopus.getKittyPic());
     },
 
     showKitty: function(kitty) {
-      $("#kittyname").text(kitty.name);
+      $('#kittyname').text(kitty.name);
       this.updateBadge(kitty.clicks);
-      this.catPic.attr("src", octopus.getKittyPic());
+      this.catPic.attr('src', octopus.getKittyPic());
     },
 
     updateBadge: function(votes) {
-      $("#kittyvotes span.badge").text(votes);
+      $('#kittyvotes span.badge').text(votes);
     }
 
   }
