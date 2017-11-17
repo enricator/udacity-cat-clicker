@@ -7,7 +7,6 @@ $(document).ready(function() {
     dummyPlaceholder: '',
     kitties: [],
     activeKitty: null,
-    adminMode: null,
 
     init: function() {
       this.dummyPlaceholder = 'http://via.placeholder.com/' + this.picSize + 'x' + this.picSize + '';
@@ -56,7 +55,6 @@ $(document).ready(function() {
         localStorage.setItem(this.lsName, JSON.stringify(this.kitties));
       }
       this.activeKitty = 0;
-      this.adminMode = false;
     }
   };
 
@@ -78,8 +76,7 @@ $(document).ready(function() {
       } else {
         for (var i = 0; i < this.kitties.length; i++) {
           this.catList.append(
-            '<li class="list-group-item kitty" id="kitty' +
-              i +
+            '<li class="list-group-item kitty" id="kitty' + i +
               '"><span class="badge">' +
               this.kitties[i].clicks +
               '</span>' +
@@ -177,9 +174,9 @@ $(document).ready(function() {
     },
 
     getValue: function(name) {
-      if(name == "name") { return this.name.val(); }
-      if(name == "url") { return this.url.val(); }
-      if(name == "votes") { return this.votes.val(); }
+      if(name == 'name') { return this.name.val(); }
+      if(name == 'url') { return this.url.val(); }
+      if(name == 'votes') { return this.votes.val(); }
       return '';
     },
 
@@ -199,7 +196,6 @@ $(document).ready(function() {
         '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
         '<span aria-hidden="true">&times;</span></button>' + message + '</div>';
       $('#formError').html(errorMessage);
-      //$('#formError').removeClass('hidden');
     }
   }
 
@@ -207,7 +203,7 @@ $(document).ready(function() {
   /* ### OCTOPUS thing ### */
   var octopus = {
     init: function() {
-      this.bDebug = true;
+      this.bDebug = false;
       this.log('\'Cat Clicker premium\' - octopus started ' + ((this.bDebug)?'in debug mode':'') );
       model.init();
       this.log('model initialized: ' + this.getKittiesNumber() + ' kittens found');
@@ -281,18 +277,18 @@ $(document).ready(function() {
       adminView.toggleView();
     },
     validateEdit: function() {
-      let name = adminView.getValue("name");
-      let url = adminView.getValue("url");
-      let votes = adminView.getValue("votes");
-      return (name != "") && (url != "") && (votes != "") && (votes >= 0);
+      let name = adminView.getValue('name');
+      let url = adminView.getValue('url');
+      let votes = adminView.getValue('votes');
+      return (name != '') && (url != '') && (votes != '') && (votes >= 0);
     },
 
     editKitty: function() {
       if (this.validateEdit()) {
         let kitty = this.getCurrentKitty();
-        kitty.name = adminView.getValue("name");
-        kitty.url = adminView.getValue("url");
-        kitty.clicks = parseInt(adminView.getValue("votes"));
+        kitty.name = adminView.getValue('name');
+        kitty.url = adminView.getValue('url');
+        kitty.clicks = parseInt(adminView.getValue('votes'));
         this.saveVotes();
         catListView.show();
         this.showActiveKitty();
