@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="description" content="Cat Clicker is a project for Udacity's JavaScript Design Patterns course">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Cat Clicker premium</title>
+    <title>Cat Clicker premium pro</title>
 
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <!-- Place favicon.ico in the root directory -->
@@ -39,7 +39,7 @@
           </li>
         -->
         </ul>
-        <h3 class="text-muted">Cat Clicker premium</h3>
+        <h3 class="text-muted">Cat Clicker premium <sup>pro</sup></h3>
       </div>
 
 <!--
@@ -69,7 +69,7 @@
       <div class='col-xs-12 text-center'>
         <h1>
           Cat Clicker
-          <small>premium</small>
+          <small>premium <sup>pro!</sup></small>
         </h1>
         <div class='desc'>Choose a cat from the list on the left, and then click on the image to cast your vote!!</div>
       </div>
@@ -78,11 +78,10 @@
     <div class='row'>
       <div class='col-xs-4'>
         <ul class='list-group' id='kittylist'></ul>
-        <a id="btnResetVotes" class="btn btn-warning disabled" href="#" role="button">Reset votes</a>
         <div id='dbg'></div>
       </div>
       <div class='col-xs-8'>
-        <img id='kittypic' src='http://via.placeholder.com/350x350'>
+        <img id='kittypic' src='http://via.placeholder.com/350x350' class="x_center-block">
         <div id='kittyname'>
           no name
         </div>
@@ -92,6 +91,55 @@
         </div>
       </div>
     </div>
+
+    <div class='row'>
+      <div class='col-xs-12'>
+        &nbsp;
+      </div>
+    </div>
+
+    <div class='row'>
+      <div class='col-xs-4'>
+        <a id="btnAdmin" class="btn btn-warning" href="#" role="button">Admin mode</a>
+        <br /><br />
+        <a id="btnResetVotes" class="btn btn-danger hidden" href="#" role="button">Reset votes</a>
+      </div>
+      <div class='col-xs-8'>
+        <form id='frmEdit' class="form-horizontal hidden">
+          <div class="form-group has-feedback">
+            <label for="inputCatName" class="col-sm-2 control-label hidden">Name</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="inputCatName" placeholder="Cat name">
+            </div>
+          </div>
+          <div class="form-group has-feedback">
+            <label for="inputCatUrl" class="col-sm-2 control-label hidden">Pic url</label>
+            <div class="col-sm-10">
+              <div class="input-group">
+                <div class="input-group-addon">url</div>
+                  <input type="url" class="form-control" id="inputCatUrl" placeholder="Cat pic url">
+                </div>
+            </div>
+          </div>
+          <div class="form-group has-feedback">
+            <label for="inputCatVotes" class="col-sm-2 control-label hidden">Votes</label>
+            <div class="col-sm-10">
+              <input type="number" min="0" class="form-control" id="inputCatVotes" placeholder="Cat votes">
+            </div>
+          </div>
+          <div id="formError"></div>
+          <div class="form-group">
+            <div class="x_col-sm-offset-2 col-sm-2">
+              <a id="btnCancel" class="btn btn-default" role="button">Cancel</a>
+            </div>
+            <div class="col-sm-2">
+              <a id="btnUpdate" class="btn btn-success" role="button">Update</a>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
 
       <div class="footer">
         <p>crafted by enricator</p>

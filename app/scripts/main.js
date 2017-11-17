@@ -7,6 +7,7 @@ $(document).ready(function() {
     dummyPlaceholder: '',
     kitties: [],
     activeKitty: null,
+    adminMode: null,
 
     init: function() {
       this.dummyPlaceholder = 'http://via.placeholder.com/' + this.picSize + 'x' + this.picSize + '';
@@ -55,6 +56,7 @@ $(document).ready(function() {
         localStorage.setItem(this.lsName, JSON.stringify(this.kitties));
       }
       this.activeKitty = 0;
+      this.adminMode = false;
     }
   };
 
@@ -141,11 +143,71 @@ $(document).ready(function() {
 
   }
 
+  var adminView = {
+    init: function() {
+      this.form = $('#frmEdit');
+      this.admin = $('#btnAdmin');
+      this.reset = $('#btnResetVotes');
+      this.cancel = $('#btnCancel');
+      this.update = $('#btnUpdate');
+
+      this.name = $('#inputCatName');
+      this.url = $('#inputCatUrl');
+      this.votes = $('#inputCatVotes');
+
+      this.admin.click(function(e) {
+        octopus.toggleAdmin();
+      });
+
+      this.cancel.click(function(e) {
+        octopus.cancelEdit();
+      });
+
+      this.update.click(function(e) {
+        octopus.editKitty();
+      });
+    },
+
+    loadKitty: function(kat) {
+      if(!this.form.hasClass('hidden')) {
+        this.name.val(kat.name);
+        this.url.val(kat.url);
+        this.votes.val(kat.clicks);
+      }
+    },
+
+    getValue: function(name) {
+      if(name == "name") { return this.name.val(); }
+      if(name == "url") { return this.url.val(); }
+      if(name == "votes") { return this.votes.val(); }
+      return '';
+    },
+
+    clearInputs: function() {
+      this.name.val('');
+      this.url.val('');
+      this.votes.val('');
+    },
+
+    toggleView: function() {
+      this.form.toggleClass('hidden');
+      this.reset.toggleClass('hidden');
+    },
+
+    showMessage: function(message, type) {
+      let errorMessage = '<div class="alert alert-' + type + ' alert-dismissible" role="alert">' +
+        '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+        '<span aria-hidden="true">&times;</span></button>' + message + '</div>';
+      $('#formError').html(errorMessage);
+      //$('#formError').removeClass('hidden');
+    }
+  }
+
 
   /* ### OCTOPUS thing ### */
   var octopus = {
     init: function() {
-      this.bDebug = false;
+      this.bDebug = true;
       this.log('\'Cat Clicker premium\' - octopus started ' + ((this.bDebug)?'in debug mode':'') );
       model.init();
       this.log('model initialized: ' + this.getKittiesNumber() + ' kittens found');
@@ -156,6 +218,8 @@ $(document).ready(function() {
       }
       catView.init();
       this.log('catView initialized');
+      adminView.init();
+      this.log('adminView initialized');
     },
 
     getKitties: function() {
@@ -177,18 +241,20 @@ $(document).ready(function() {
     setActiveKitty: function(catId) {
       model.activeKitty = catId;
       catView.showActiveKitty(catId);
+      adminView.loadKitty(this.getCurrentKitty());
     },
     showActiveKitty: function() {
       catView.showActiveKitty(model.activeKitty);
+      adminView.loadKitty(this.getCurrentKitty());
     },
 
     voteForKitty: function() {
       let kitty = this.getCurrentKitty();
       kitty.clicks += 1;
       this.log('new vote for ' + kitty.name + ' [id: '+ this.getCurrentKittyId() +']');
-      //catView.showKitty(kitty);
       catListView.updateBadge(this.getCurrentKittyId(), kitty.clicks);
       catView.updateBadge(kitty.clicks);
+      adminView.loadKitty(kitty);
       this.saveVotes();
     },
 
@@ -200,14 +266,45 @@ $(document).ready(function() {
       model.kitties.forEach(function(kat) {
         kat.clicks = 0;
       });
-      localStorage.setItem(model.lsName, JSON.stringify(this.getKitties()));
+      this.saveVotes();
       this.log('votes have been reset!');
       catListView.show();
       this.showActiveKitty();
     },
 
+    toggleAdmin: function() {
+      adminView.toggleView();
+      adminView.loadKitty(this.getCurrentKitty());
+    },
+    cancelEdit: function() {
+      adminView.clearInputs();
+      adminView.toggleView();
+    },
+    validateEdit: function() {
+      let name = adminView.getValue("name");
+      let url = adminView.getValue("url");
+      let votes = adminView.getValue("votes");
+      return (name != "") && (url != "") && (votes != "") && (votes >= 0);
+    },
+
+    editKitty: function() {
+      if (this.validateEdit()) {
+        let kitty = this.getCurrentKitty();
+        kitty.name = adminView.getValue("name");
+        kitty.url = adminView.getValue("url");
+        kitty.clicks = parseInt(adminView.getValue("votes"));
+        this.saveVotes();
+        catListView.show();
+        this.showActiveKitty();
+        adminView.showMessage('cat info updated', 'success');
+      } else {
+        adminView.showMessage('invalid form data!!!', 'warning');
+        console.log('invalid form data!!!');
+      }
+    },
+
     log: function(s) {
-      console.log(s);
+      if (this.bDebug) {console.log(s);}
     }
   }
 
